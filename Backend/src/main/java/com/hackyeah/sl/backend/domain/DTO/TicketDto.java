@@ -24,6 +24,6 @@ public class TicketDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     LocalDateTime expirationDate;
     String ticketImageUrl;
-    Long latitude;
-    Long longitude;
+    Double latitude;
+    Double longitude;
 }

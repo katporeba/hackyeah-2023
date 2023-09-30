@@ -12,12 +12,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     List<Ticket> findAllByCategory(String category);
 
-    @Query("SELECT t FROM Ticket t " +
-            "WHERE (6371 * 2 * ASIN(SQRT(POWER(SIN(RADIANS(:latitude - t.latitude) / 2), 2) + " +
-            "COS(RADIANS(:latitude)) * COS(RADIANS(t.latitude)) * " +
-            "POWER(SIN(RADIANS(:longitude - t.longitude) / 2), 2)))) <= 1.0")
-    List<Ticket> findTicketsInOneKilometerRange(@Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
+    @Query("SELECT t FROM Ticket t WHERE FUNCTION('earth_distance', FUNCTION('ll_to_earth', :latitude, :longitude), FUNCTION('ll_to_earth', t.latitude, t.longitude)) < :radius") // 1 km = 1000.0 meters
+    List<Ticket> findTicketsWithinRange(@Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("radius") Long radius);
     List<Ticket> findByUserEmail(String email);
 
     Ticket findByTicketId(String ticketId);
