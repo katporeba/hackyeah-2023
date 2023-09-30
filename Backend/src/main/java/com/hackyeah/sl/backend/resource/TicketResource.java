@@ -3,7 +3,6 @@ package com.hackyeah.sl.backend.resource;
 import com.hackyeah.sl.backend.domain.DTO.TicketDto;
 import com.hackyeah.sl.backend.domain.DTO.TicketInRange;
 import com.hackyeah.sl.backend.domain.Ticket;
-import com.hackyeah.sl.backend.domain.mappers.TicketMapper;
 import com.hackyeah.sl.backend.service.TicketService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.hackyeah.sl.backend.constant.FileConstant.FORWARD_SLASH;
 import static com.hackyeah.sl.backend.constant.FileConstant.USER_FOLDER;
@@ -33,7 +31,6 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 public class TicketResource {
 
     private TicketService ticketService;
-    private final TicketMapper ticketMapper;
 
     @GetMapping("/list/{category}")
     public ResponseEntity<List<Ticket>> ticketListByCategory(@NotBlank @PathVariable String category) {
@@ -74,7 +71,7 @@ public class TicketResource {
 
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/add/image")
-    public ResponseEntity<Ticket> add(@RequestParam(name="tickedId") String ticketId ,@RequestParam(name = "file") MultipartFile file) throws IOException {
+    public ResponseEntity<Ticket> add(@RequestParam(name = "tickedId") String ticketId, @RequestParam(name = "file") MultipartFile file) throws IOException {
 
         Ticket ticket = ticketService.getTicketsByTicketId(ticketId);
 
@@ -96,13 +93,8 @@ public class TicketResource {
     public ResponseEntity<List<Ticket>> findTicketsInOneKilometer(@RequestBody TicketInRange ticket) {
 
         List<Ticket> tickets = ticketService.getTicketsWithinRange(ticket.getLatitude(), ticket.getLongitude(), ticket.getRadius());
-
-        //List<TicketDto> ticketDtos = tickets.stream().map(ticketMapper::toDto).collect(Collectors.toList());
-
         return new ResponseEntity<>(tickets, HttpStatus.CREATED);
     }
-
-
 
 
 }
