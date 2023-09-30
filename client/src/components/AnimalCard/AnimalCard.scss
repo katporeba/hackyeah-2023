@@ -1,0 +1,46 @@
+.animal-card-container.MuiBox-root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  border-radius: 33px;
+  background-color: #9cc06c;
+  max-width: 300px;
+  padding: 5px;
+}
+
+.animal-details.MuiBox-root {
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  border-radius: 33px;
+  background-color: #9cc06c;
+}
+
+.animal-details-text-title.MuiTypography-root {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: auto;
+  width: 80%;
+}
+
+.animal-details-text-content.MuiTypography-root {
+  font-size: 1rem;
+  font-weight: 300;
+  color: #fff;
+  margin: auto;
+  width: 80%;
+}
+
+.animal-location.MuiBox-root {
+  display: flex;
+  background-color: white;
+  width: 90%;
+  border-radius: 33px;
+}
