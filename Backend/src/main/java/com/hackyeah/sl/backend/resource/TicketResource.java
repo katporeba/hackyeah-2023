@@ -26,16 +26,21 @@ public class TicketResource {
     private TicketService ticketService;
     private final TicketMapper ticketMapper;
 
-//    @GetMapping("/list")
-//    public ResponseEntity<List<Ticket>> ticketList() {
-//        return new ResponseEntity<>(tickets, OK);
-//    }
-
     @GetMapping("/list/{category}")
     public ResponseEntity<List<Ticket>> ticketListByCategory(@NotBlank @PathVariable String category) {
         List<Ticket> tickets = ticketService.getTicketsByCategory(category);
         return new ResponseEntity<>(tickets, OK);
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    @PostMapping("/extendTime/{ticketId}")
+    public ResponseEntity<Ticket> extendTimeBy1Hour(@NotBlank @PathVariable String ticketId) {
+
+        Ticket ticket = ticketService.extendTicketTime(ticketId);
+
+        return new ResponseEntity<>(ticket, OK);
+    }
+
 
     @GetMapping("/list")
     public ResponseEntity<List<Ticket>> ticketByEmail(@RequestParam(name = "email", required = false) String email) {

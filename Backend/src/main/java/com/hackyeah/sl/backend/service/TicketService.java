@@ -17,4 +17,6 @@ public interface TicketService {
     List<Ticket> getTicketsWithinOneKilometer(Double targetLatitude, Double targetLongitude);
 
     List<Ticket> getTicketsByEmail(String email);
+
+    Ticket extendTicketTime(String ticketId);
 }
