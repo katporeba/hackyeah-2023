@@ -23,6 +23,7 @@ public class SecurityConstant {
             "/v2/api-docs/**",
             "/user/image/**",
             "/actuator/**",
-            "/ticket/list/**"
+            "/ticket/list/**",
+            "/category/**"
     };
 }
