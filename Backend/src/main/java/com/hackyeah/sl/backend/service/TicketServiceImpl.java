@@ -54,7 +54,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void deleteTicker(String ticketId) {
+    public void deleteTicket(String ticketId) {
         ticketRepository.deleteByTicketId(ticketId);
 
     }
@@ -138,5 +138,20 @@ public class TicketServiceImpl implements TicketService {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(USER_IMAGE_PATH + ticketId + FORWARD_SLASH + ticketId + DOT + JPG_EXTENSION)
                 .toUriString();
+    }
+
+    @Override
+    public Ticket updateTicket(String ticketId, Ticket newTicket) {
+
+        Ticket ticket = ticketRepository.findByTicketId(ticketId);
+
+        ticket.setCategory(newTicket.getCategory());
+        ticket.setComment(newTicket.getComment());
+        ticket.setAggressive(newTicket.isAggressive());
+        ticket.setCount(newTicket.getCount());
+
+        ticketRepository.save(ticket);
+
+        return ticket;
     }
 }

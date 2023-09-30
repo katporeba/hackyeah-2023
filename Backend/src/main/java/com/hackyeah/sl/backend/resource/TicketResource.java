@@ -47,6 +47,24 @@ public class TicketResource {
         return new ResponseEntity<>(ticket, OK);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    @DeleteMapping("/delete/{ticketId}")
+    public ResponseEntity<Ticket> deleteTicketByTicketId(@NotBlank @PathVariable String ticketId) {
+
+        ticketService.deleteTicket(ticketId);
+
+        return new ResponseEntity<>(OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    @PutMapping("/update/{ticketId}")
+    public ResponseEntity<Ticket> updateTicket(@NotBlank @PathVariable String ticketId, @RequestBody Ticket ticket) {
+
+        Ticket newTicket = ticketService.updateTicket(ticketId, ticket);
+
+        return new ResponseEntity<>(newTicket, OK);
+    }
+
 
     @GetMapping("/list")
     public ResponseEntity<List<Ticket>> ticketByEmail(@RequestParam(name = "email", required = false) String email) {
