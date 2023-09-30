@@ -7,6 +7,7 @@ import com.hackyeah.sl.backend.domain.User;
 import com.hackyeah.sl.backend.domain.UserPrincipal;
 import com.hackyeah.sl.backend.exception.ExceptionHandling;
 import com.hackyeah.sl.backend.exception.domain.*;
+import com.hackyeah.sl.backend.service.TokenBlacklistService;
 import com.hackyeah.sl.backend.service.UserService;
 import com.hackyeah.sl.backend.utilty.JwtTokenProvider;
 import jakarta.validation.Valid;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import static com.hackyeah.sl.backend.constant.FileConstant.*;
 import static com.hackyeah.sl.backend.constant.SecurityConstant.AUTHORIZATION_HEADER;
+import static com.hackyeah.sl.backend.constant.SecurityConstant.TOKEN_PREFIX;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
@@ -45,9 +47,11 @@ public class UserResource extends ExceptionHandling {
 
     public static final String NEW_PASSWORD_WAS_SENT_TO = "Email with new password was sent to: ";
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
+    public static final String USER_LOGGED_OFF = "User deleted successfully";
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody UserRegister user)
@@ -137,6 +141,13 @@ public class UserResource extends ExceptionHandling {
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<HttpResponse> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) throws EmailNotFoundException {
+        tokenBlacklistService.blacklistToken(authorization.substring(TOKEN_PREFIX.length()));
+        return response(OK, USER_LOGGED_OFF);
+    }
+
 
     @GetMapping("/find/{email}")
     public ResponseEntity<User> findUser(@NotBlank @PathVariable String email) {
