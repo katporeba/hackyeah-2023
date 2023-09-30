@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgres:///supportportal?TC_IMAGE_TAG=15.2
+    password: user
+    username: password
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQL81Dialect
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    user: user
+    baseline-description: "init"
+    baseline-version: 0
+    password: password
+
+logging:
+  level:
+    root: debug
+jwt:
+  secret: 'FdMSpY6dNFlEF3zHVhhIkXEZ0udQCdyzQslxnO9n'
+email:
+  username: 'smalecbartlomiej@outlook.com'
+  password: '**********'
+frontend:
+  url: "http://localhost:4200"

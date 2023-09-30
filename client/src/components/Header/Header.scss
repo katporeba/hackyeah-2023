@@ -1,0 +1,31 @@
+.header-container.MuiBox-root {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logo-container.MuiBox-root img{
+  width: 4rem;
+  margin: 2rem;
+}
+
+.logo-container.MuiBox-root .name.MuiTypography-root a {
+  color: #353535;
+  font-weight: 700;
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+.links-container.MuiBox-root a {
+  text-decoration: none;
+  color: #353535;
+  margin-right: 2rem;
+}

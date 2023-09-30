@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    password: sa
+    username: sa
+  jpa:
+    properties:
+      dialect: platform=org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    user: sa
+    password: sa
+    baseline-description: "init"
+    baseline-version: 0
+
+logging:
+  level:
+    root: debug
+jwt:
+  secret: 'LTzn2hPBJLf5dDRb'
+email:
+  username: 'smalecbartlomiej@outlook.com'
+  password: '*************'
+frontend:
+  url: "http://localhost:4200"
