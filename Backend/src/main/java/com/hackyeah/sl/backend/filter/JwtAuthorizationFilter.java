@@ -58,8 +58,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         throw new LogoutException("You logged off");
       }
 
-      String username = jwtTokenProvider.getSubject(token);
-      if (jwtTokenProvider.isTokenValid(username, token)) {
+      String email = jwtTokenProvider.getSubject(token);
+      if (jwtTokenProvider.isTokenValid(email, token)) {
 
         List<SimpleGrantedAuthority> role = jwtTokenProvider.getAuthorities(token);
 
@@ -72,7 +72,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         authorities.addAll(role);
 
         Authentication authentication =
-            jwtTokenProvider.getAuthentication(username, authorities, request);
+            jwtTokenProvider.getAuthentication(email, authorities, request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
       } else {
         SecurityContextHolder.clearContext();
