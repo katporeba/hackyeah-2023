@@ -1,6 +1,11 @@
 package com.hackyeah.sl.backend;
 
+import com.hackyeah.sl.backend.domain.Category;
+import com.hackyeah.sl.backend.repository.CategoryRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
@@ -20,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.hackyeah.sl.backend.constant.FileConstant.USER_FOLDER;
 
@@ -88,5 +94,6 @@ public class BackendApplication {
                 && (StringUtils.hasText(basePath)
                 || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }
+
 
 }
