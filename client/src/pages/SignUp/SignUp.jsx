@@ -1,50 +1,28 @@
-import "./SignUp.scss";
+import "../SignIn/SignIn.scss";
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Typography, Box, InputAdornment, IconButton, CircularProgress } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, TextField, Typography, Box, InputAdornment, IconButton } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import Header from "../../components/Header";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthService from "../../services/authService";
-import {
-  isEmail,
-  isPasswordStrong,
-  markValidation,
-  markValidationPassword,
-} from "../../common/validateUtils/validateSignUp";
+import { isEmail, isPasswordStrong, markValidation } from "../../common/validateUtils/validateSignUp";
+import googleIcon from "../../assets/google_logo.png";
+import facebookIcon from "../../assets/facebook_logo.png";
+import appleIcon from "../../assets/apple_logo.png";
 
 export function SignUp() {
+  const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({
-    email: "",
-    name: "",
-    password: "",
-    passwordValidate: "",
-  });
-  const [validateEmail, setValidateEmail] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [validatePassword, setValidatePassword] = useState(false);
-  const [validateName, setValidateName] = useState(false);
-  const [validatePasswordStrong, setValidatePasswordStrong] = useState(false);
+  const [validateEmail, setValidateEmail] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordSecond, setShowPasswordSecond] = useState(false);
-  const handleClickShowPassword = (setPassword, show) => setPassword(!show);
-  const handleMouseDownPassword = (setPassword, show) => setPassword(!show);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
   const navigate = useNavigate();
-
-  const onSubmitSendData = async () => {
-    setError(null);
-    setLoading(true);
-    await AuthService.register(data.email, data.password, data.name, setError);
-    setLoading(false);
-    if (!error) {
-      return navigate("/sign-in");
-    }
-  };
-
-  const onChangeAddToState = (key, value) => {
-    setData({ ...data, [key]: value });
-  };
 
   useEffect(() => {
     if (AuthService.getCurrentUser()) {
@@ -52,42 +30,72 @@ export function SignUp() {
     }
   }, []);
 
+  const onSubmitSendData = async () => {
+    if (validateEmail && validatePassword) {
+      setError(null);
+      setLoading(true);
+      const returnedData = await AuthService.login(email, password, setError);
+      setPost(returnedData);
+      setLoading(false);
+    } else {
+      setError("wrong data");
+    }
+  };
+
+  const onChangeInput = (value, setFun) => {
+    setFun(value);
+  };
+
   return (
     <>
-      <Header selected="signUp" theme="light" />
+      <div className="navbox" />
       <Box className="signup-container">
-        <Box className="form-container">
+        <Box className="signup-content-right">
           <Typography className="header">Rejestracja</Typography>
           <Box className="signup-inputs">
             <Typography className="input-description">Email</Typography>
             <TextField
+              className={`input-field ${!validateEmail ? "error" : "success"}`}
               id="email-input"
-              className={!validateEmail ? "error" : "success"}
               placeholder="Podaj e-mail"
               variant="outlined"
+              value={email}
+              type="email"
               onChange={(e) => {
                 markValidation(isEmail(e.target.value), setValidateEmail);
-                onChangeAddToState("email", e.target.value);
+                onChangeInput(e.target.value, setEmail);
+              }}
+              sx={{
+                "& fieldset": {
+                  borderRadius: "50px",
+                  border: "none",
+                },
+                input: {
+                  "&::placeholder": {
+                    padding: "0 .5rem",
+                  },
+                },
               }}
             />
             <Typography className="input-description">Hasło</Typography>
             <TextField
+              className={`input-field ${!validatePassword ? "error" : "success"}`}
               id="password-input"
-              className={!validatePasswordStrong ? "error" : "success"}
               placeholder="Podaj hasło"
               variant="outlined"
-              onChange={(e) => {
-                markValidation(isPasswordStrong(e.target.value), setValidatePasswordStrong);
-                onChangeAddToState("password", e.target.value);
-              }}
               type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => {
+                markValidation(isPasswordStrong(e.target.value), setValidatePassword);
+                onChangeInput(e.target.value, setPassword);
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={() => handleClickShowPassword(setShowPassword, showPassword)}
-                      onMouseDown={() => handleMouseDownPassword(setShowPassword, showPassword)}
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
                       className="toggle-visibility-icon"
                     >
                       {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
@@ -95,52 +103,54 @@ export function SignUp() {
                   </InputAdornment>
                 ),
               }}
+              sx={{
+                "& fieldset": {
+                  borderRadius: "50px",
+                  border: "none",
+                },
+                input: {
+                  "&::placeholder": {
+                    padding: "0 .5rem",
+                  },
+                },
+              }}
             />
-            {data.password && (
-              <>
-                <Typography className="input-description">Powtórz hasło</Typography>
-                <TextField
-                  id="password-input-validate"
-                  className={!validatePassword ? "error" : "success"}
-                  placeholder="Powtórz swoje hasło"
-                  variant="outlined"
-                  onChange={(e) => {
-                    markValidationPassword(data.password, e.target.value, setValidatePassword);
-                    onChangeAddToState("passwordValidate", e.target.value);
-                  }}
-                  type={showPasswordSecond ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => handleClickShowPassword(setShowPasswordSecond, showPasswordSecond)}
-                          onMouseDown={() => handleMouseDownPassword(setShowPasswordSecond, showPasswordSecond)}
-                          className="toggle-visibility-icon"
-                        >
-                          {showPasswordSecond ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </>
+            {error && (
+              <Typography className="input-description error-message">{error.response.data.message}</Typography>
             )}
+            {post && <Navigate to="/statistics" replace />}
           </Box>
-          {error && <Typography className="input-description error-message">{error.response.data.message}</Typography>}
+          <Box className="divider" />
+          <Typography className="or-signin-with">Lub zarejestruj się z</Typography>
+          <Box className="social-media-buttons">
+            <Button variant="outlined" className="social-media-button">
+              <img src={googleIcon} alt="google-icon" />
+            </Button>
+            <Button variant="outlined" className="social-media-button">
+              <img src={facebookIcon} alt="facebook-icon" />
+            </Button>
+            <Button variant="outlined" className="social-media-button">
+              <img src={appleIcon} alt="apple-icon" />
+            </Button>
+          </Box>
           <Box className="signup-buttons">
             {loading ? (
               <CircularProgress className="progress-circular" />
             ) : (
               <Button
+                variant="contained"
                 onClick={() => onSubmitSendData()}
-                disabled={!(validateEmail && validatePassword && validateName && validatePasswordStrong)}
+                disabled={!(validateEmail && validatePassword)}
+                className="signup-button"
               >
-                Zarejestruj
+                Zarejestruj się
               </Button>
             )}
             <Typography className="switch-site">
-              Posiadasz juz konto? <Link to="/sign-in">Zaloguj się</Link>
+              Posiadasz już konto?{" "}
+              <Link className="switch-site-link" to="/sign-in">
+                Zaloguj się
+              </Link>
             </Typography>
           </Box>
         </Box>

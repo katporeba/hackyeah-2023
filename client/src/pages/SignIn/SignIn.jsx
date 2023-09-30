@@ -47,7 +47,6 @@ export function SignIn() {
   };
 
   return (
-    // add navigation to homepage
     <>
       <div className="navbox" />
       <Box className="signup-container">
