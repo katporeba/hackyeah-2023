@@ -1,10 +1,9 @@
 package com.hackyeah.sl.backend.constant;
 
 public class SecurityConstant {
-    public static final long EXPIRATION_TIME = 7_200_000; // 5 days expressed in milliseconds
+    public static final long EXPIRATION_TIME = 7_200_000;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
     public static final String SUPPORT_APP_LLC = "Support App, LLC";
     public static final String SUPPORT_APP_ADMINISTRATION = "User Management Portal";
     public static final String AUTHORITIES = "Authorities";
