@@ -17,7 +17,7 @@ public interface TicketService {
 
     Ticket addTicket(TicketDto ticket, String authorization);
 
-    List<Ticket> getTicketsWithinOneKilometer(Double targetLatitude, Double targetLongitude);
+    List<Ticket> getTicketsWithinRange(Double targetLatitude, Double targetLongitude, Long radius);
 
     List<Ticket> getTicketsByEmail(String email);
 

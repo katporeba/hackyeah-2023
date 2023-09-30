@@ -1,11 +1,10 @@
 package com.hackyeah.sl.backend.resource;
 
 import com.hackyeah.sl.backend.domain.DTO.TicketDto;
-import com.hackyeah.sl.backend.domain.DTO.TicketInOneKilometer;
+import com.hackyeah.sl.backend.domain.DTO.TicketInRange;
 import com.hackyeah.sl.backend.domain.Ticket;
 import com.hackyeah.sl.backend.domain.mappers.TicketMapper;
 import com.hackyeah.sl.backend.service.TicketService;
-import com.hackyeah.sl.backend.service.UserServiceImpl;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -94,13 +93,13 @@ public class TicketResource {
 
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/list/nearby")
-    public ResponseEntity<List<TicketDto>> findTicketsInOneKilometer(@RequestBody TicketInOneKilometer ticket) {
+    public ResponseEntity<List<Ticket>> findTicketsInOneKilometer(@RequestBody TicketInRange ticket) {
 
-        List<Ticket> tickets = ticketService.getTicketsWithinOneKilometer(ticket.getTargetLatitude(), ticket.getTargetLongitude());
+        List<Ticket> tickets = ticketService.getTicketsWithinRange(ticket.getLatitude(), ticket.getLongitude(), ticket.getRadius());
 
-        List<TicketDto> ticketDtos = tickets.stream().map(ticketMapper::toDto).collect(Collectors.toList());
+        //List<TicketDto> ticketDtos = tickets.stream().map(ticketMapper::toDto).collect(Collectors.toList());
 
-        return new ResponseEntity<>(ticketDtos, HttpStatus.CREATED);
+        return new ResponseEntity<>(tickets, HttpStatus.CREATED);
     }
 
 

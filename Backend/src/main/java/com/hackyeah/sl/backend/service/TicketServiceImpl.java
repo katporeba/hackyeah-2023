@@ -9,7 +9,6 @@ import com.hackyeah.sl.backend.repository.TicketRepository;
 import com.hackyeah.sl.backend.repository.UserRepository;
 import com.hackyeah.sl.backend.utilty.JwtTokenProvider;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -88,19 +87,8 @@ public class TicketServiceImpl implements TicketService {
         newtTicket.setExpirationDate(LocalDateTime.now().plusHours(1));
     }
 
-    public List<Ticket> getTicketsWithinOneKilometer(Double targetLatitude, Double targetLongitude) {
-        double radius = 1.0; // 1 kilometer
-        String hql = "SELECT t FROM Ticket t WHERE " +
-                "6371 * 2 * ASIN(SQRT(POWER(SIN((:targetLatitude - t.latitude) * PI() / 180 / 2), 2) + " +
-                "COS(:targetLatitude * PI() / 180) * COS(t.latitude * PI() / 180) * " +
-                "POWER(SIN((:targetLongitude - t.longitude) * PI() / 180 / 2), 2))) <= :radius";
-
-        Query query = entityManager.createQuery(hql);
-        query.setParameter("targetLatitude", targetLatitude);
-        query.setParameter("targetLongitude", targetLongitude);
-        query.setParameter("radius", radius);
-
-        return query.getResultList();
+    public List<Ticket> getTicketsWithinRange(Double targetLatitude, Double targetLongitude, Long radius) {
+        return ticketRepository.findTicketsWithinRange(targetLatitude, targetLongitude, radius);
     }
 
     @Override

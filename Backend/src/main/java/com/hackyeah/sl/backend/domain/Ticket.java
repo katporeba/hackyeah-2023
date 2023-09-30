@@ -1,14 +1,10 @@
 package com.hackyeah.sl.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -39,7 +35,9 @@ public class Ticket {
 
     private String ticketImageUrl;
 
+    @Column(columnDefinition = "DOUBLE PRECISION")
     private Double latitude;
+    @Column(columnDefinition = "DOUBLE PRECISION")
     private Double longitude;
 
     @ManyToOne

@@ -7,7 +7,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @Builder
-public class TicketInOneKilometer {
-    Double targetLatitude;
-    Double targetLongitude;
+public class TicketInRange {
+    Double latitude;
+    Double longitude;
+    Long radius;
 }
