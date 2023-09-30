@@ -1,10 +1,12 @@
 package com.hackyeah.sl.backend.service;
 
 
+import com.hackyeah.sl.backend.domain.Ticket;
 import com.hackyeah.sl.backend.domain.User;
 import com.hackyeah.sl.backend.domain.UserPrincipal;
 import com.hackyeah.sl.backend.enumeration.Role;
 import com.hackyeah.sl.backend.exception.domain.*;
+import com.hackyeah.sl.backend.repository.TicketRepository;
 import com.hackyeah.sl.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder passwordEncoder;
   private final LoginAttemptService loginAttemptService;
+  private final TicketRepository ticketRepository;
 
   @SneakyThrows
   @Override
@@ -197,39 +200,42 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     //user.setAuthorities(getRoleEnumName(role).getAuthorities());
     user.setProfileImageUrl(getDefaultProfileImageUrl(email));
     User savedUser = userRepository.save(user);
-    saveProfileImage(savedUser, profileImage);
+    //saveTicketImage(savedUser, profileImage);
 
     //emailService.sendNewPasswordEmail(savedUser.getFirstName(), password, email);
     log.info("New user password: " + password);
     return user;
   }
 
-  private void saveProfileImage(User user, MultipartFile profileImage)
+  public void saveTicketImage(Ticket ticket, MultipartFile image)
       throws IOException, NotAnImageFileException {
-    if (profileImage != null) {
+    if (image != null) {
       if (!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE)
-          .contains(profileImage.getContentType())) {
-        throw new NotAnImageFileException(profileImage.getOriginalFilename() + " is not an image.");
+          .contains(image.getContentType())) {
+        throw new NotAnImageFileException(image.getOriginalFilename() + " is not an image.");
       }
-      Path userFolder = Paths.get(USER_FOLDER + user.getEmail()).toAbsolutePath().normalize();
+      Path userFolder = Paths.get(USER_FOLDER + ticket.getTicketId()).toAbsolutePath().normalize();
       if (!Files.exists(userFolder)) {
         Files.createDirectories(userFolder);
         log.info(DIRECTORY_CREATED + userFolder);
       }
-      Files.deleteIfExists(Paths.get(USER_FOLDER + user.getEmail() + DOT + JPG_EXTENSION));
+      Files.deleteIfExists(Paths.get(USER_FOLDER + ticket.getTicketId() + DOT + JPG_EXTENSION));
       Files.copy(
-          profileImage.getInputStream(),
-          userFolder.resolve(user.getEmail() + DOT + JPG_EXTENSION),
+          image.getInputStream(),
+          userFolder.resolve(ticket.getTicketId() + DOT + JPG_EXTENSION),
           REPLACE_EXISTING);
-      user.setProfileImageUrl(setProfileImageUrl(user.getEmail()));
-      userRepository.save(user);
-      log.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
+
+      ticket.setTicketImageUrl(setProfileImageUrl(ticket.getTicketId()));
+
+      ticketRepository.save(ticket);
+
+      log.info(FILE_SAVED_IN_FILE_SYSTEM + image.getOriginalFilename());
     }
   }
 
-  private String setProfileImageUrl(String username) {
+  private String setProfileImageUrl(String ticketId) {
     return ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path(USER_IMAGE_PATH + username + FORWARD_SLASH + username + DOT + JPG_EXTENSION)
+        .path(USER_IMAGE_PATH + ticketId + FORWARD_SLASH + ticketId + DOT + JPG_EXTENSION)
         .toUriString();
   }
 
@@ -262,7 +268,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     currentUser.setRole(getRoleEnumName(role).name());
     //currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
     User savedUser = userRepository.save(currentUser);
-    saveProfileImage(savedUser, profileImage);
+    //saveTicketImage(savedUser, profileImage);
     return currentUser;
   }
 
@@ -294,7 +300,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   public User updateProfileImage(String email, MultipartFile profileImage)
       throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
     User user = validateNewUsernameAndEmail(email, null);
-    saveProfileImage(user, profileImage);
+    //saveTicketImage(user, profileImage);
     return user;
   }
 }

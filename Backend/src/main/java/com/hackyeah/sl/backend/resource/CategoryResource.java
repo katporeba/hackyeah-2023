@@ -15,7 +15,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = {"/category"})
-public class CategoryController {
+public class CategoryResource {
 
     private CategoryRepository categoryRepository;
     @GetMapping("/list")
