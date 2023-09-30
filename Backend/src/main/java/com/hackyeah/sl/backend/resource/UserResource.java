@@ -185,6 +185,8 @@ public class UserResource extends ExceptionHandling {
         return Files.readAllBytes(Paths.get(USER_FOLDER + email + FORWARD_SLASH + filename));
     }
 
+
+
     @GetMapping(path = "/image/profile/{email}", produces = IMAGE_JPEG_VALUE)
     public byte[] getTempProfileImage(@NotBlank @PathVariable String email)
             throws IOException {

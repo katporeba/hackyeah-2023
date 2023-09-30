@@ -18,4 +18,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                   "POWER(SIN(RADIANS(:longitude - t.longitude) / 2), 2)))) <= 1.0")
     List<Ticket> findTicketsInOneKilometerRange(@Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
+    List<Ticket> findByUserEmail(String email);
+
 }

@@ -26,15 +26,26 @@ public class TicketResource {
     private TicketService ticketService;
     private final TicketMapper ticketMapper;
 
-    @GetMapping("/list")
-    public ResponseEntity<List<Ticket>> ticketList() {
-        List<Ticket> tickets = ticketService.getTickets();
-        return new ResponseEntity<>(tickets, OK);
-    }
+//    @GetMapping("/list")
+//    public ResponseEntity<List<Ticket>> ticketList() {
+//        return new ResponseEntity<>(tickets, OK);
+//    }
 
     @GetMapping("/list/{category}")
     public ResponseEntity<List<Ticket>> ticketListByCategory(@NotBlank @PathVariable String category) {
         List<Ticket> tickets = ticketService.getTicketsByCategory(category);
+        return new ResponseEntity<>(tickets, OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Ticket>> ticketByEmail(@RequestParam(name = "email", required = false) String email) {
+        List<Ticket> tickets;
+        if (email == null) {
+            tickets = ticketService.getTickets();
+
+        } else {
+            tickets = ticketService.getTicketsByEmail(email);
+        }
         return new ResponseEntity<>(tickets, OK);
     }
 

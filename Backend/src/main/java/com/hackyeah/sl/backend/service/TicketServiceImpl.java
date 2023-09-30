@@ -92,4 +92,9 @@ public class TicketServiceImpl implements TicketService {
 
         return query.getResultList();
     }
+
+    @Override
+    public List<Ticket> getTicketsByEmail(String email) {
+        return ticketRepository.findByUserEmail(email);
+    }
 }
