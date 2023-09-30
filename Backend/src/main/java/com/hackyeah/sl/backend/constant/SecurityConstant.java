@@ -1,7 +1,7 @@
 package com.hackyeah.sl.backend.constant;
 
 public class SecurityConstant {
-    public static final long EXPIRATION_TIME = 432_000_000; // 5 days expressed in milliseconds
+    public static final long EXPIRATION_TIME = 7_200_000; // 5 days expressed in milliseconds
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
@@ -22,6 +22,7 @@ public class SecurityConstant {
             "/swagger-ui.html",
             "/v2/api-docs/**",
             "/user/image/**",
-            "/actuator/**"
+            "/actuator/**",
+            "/ticket/list/**"
     };
 }

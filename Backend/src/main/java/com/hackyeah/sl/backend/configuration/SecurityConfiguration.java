@@ -26,53 +26,47 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfiguration {
-  private JwtAuthorizationFilter authorizationFilter;
-  private JwtAccessDeniedHandler accessDeniedHandler;
-  private JwtAuthenticationEntryPoint authenticationEntryPoint;
-  private UserDetailsService userDetailsService;
-  private BCryptPasswordEncoder passwordEncoder;
-  private AuthenticationEventPublisher authenticationEventPublisher;
+    private JwtAuthorizationFilter authorizationFilter;
+    private JwtAccessDeniedHandler accessDeniedHandler;
+    private JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private UserDetailsService userDetailsService;
+    private BCryptPasswordEncoder passwordEncoder;
+    private AuthenticationEventPublisher authenticationEventPublisher;
 
-  /*~~(Migrate manually based on https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter)~~>*/
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    auth.authenticationEventPublisher(authenticationEventPublisher);
-  }
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.authenticationEventPublisher(authenticationEventPublisher);
+    }
 
-//  @Bean
-//  protected AuthenticationManager authenticationManager() throws Exception {
-//    return super.authenticationManager();
-//  }
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(authProvider);
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(){
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService);
-    authProvider.setPasswordEncoder(passwordEncoder);
-    return new ProviderManager(authProvider);
-  }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf()
+                .disable()
+                .cors()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(SecurityConstant.PUBLIC_URL)
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf()
-        .disable()
-        .cors()
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeHttpRequests()
-        .requestMatchers(SecurityConstant.PUBLIC_URL)
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .exceptionHandling()
-        .accessDeniedHandler(accessDeniedHandler)
-        .authenticationEntryPoint(authenticationEntryPoint)
-        .and()
-        .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
-
-    return http.build();
-  }
+        return http.build();
+    }
 }

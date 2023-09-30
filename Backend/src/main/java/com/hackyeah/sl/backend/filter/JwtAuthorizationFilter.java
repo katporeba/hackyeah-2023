@@ -2,13 +2,16 @@ package com.hackyeah.sl.backend.filter;
 
 import com.hackyeah.sl.backend.domain.User;
 import com.hackyeah.sl.backend.enumeration.Role;
+import com.hackyeah.sl.backend.exception.LogoutException;
 import com.hackyeah.sl.backend.repository.UserRepository;
+import com.hackyeah.sl.backend.service.TokenBlacklistService;
 import com.hackyeah.sl.backend.utilty.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +36,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
   private final UserRepository userRepository;
+  private final TokenBlacklistService tokenBlacklistService;
 
+  @SneakyThrows
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -48,8 +53,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return;
       }
       String token = authorizationHeader.substring(TOKEN_PREFIX.length());
-      String username = jwtTokenProvider.getSubject(token);
-      if (jwtTokenProvider.isTokenValid(username, token)) {
+
+      if (tokenBlacklistService.isTokenBlacklisted(token)) {
+        throw new LogoutException("You logged off");
+      }
+
+      String email = jwtTokenProvider.getSubject(token);
+      if (jwtTokenProvider.isTokenValid(email, token)) {
 
         List<SimpleGrantedAuthority> role = jwtTokenProvider.getAuthorities(token);
 
@@ -62,7 +72,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         authorities.addAll(role);
 
         Authentication authentication =
-            jwtTokenProvider.getAuthentication(username, authorities, request);
+            jwtTokenProvider.getAuthentication(email, authorities, request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
       } else {
         SecurityContextHolder.clearContext();
