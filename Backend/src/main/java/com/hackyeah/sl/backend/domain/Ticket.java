@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -34,12 +35,12 @@ public class Ticket {
 
     private String comment;
 
-    private Date expirationDate;
+    private LocalDateTime expirationDate;
 
     private String ticketImageUrl;
 
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

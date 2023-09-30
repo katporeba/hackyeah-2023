@@ -13,4 +13,6 @@ public interface TicketService {
     void deleteTicker(String ticketId);
 
     Ticket addTicket(TicketDto ticket, String authorization);
+
+    List<Ticket> getTicketsWithinOneKilometer(Double targetLatitude, Double targetLongitude);
 }

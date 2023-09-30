@@ -22,6 +22,7 @@ public class SecurityConstant {
             "/swagger-ui.html",
             "/v2/api-docs/**",
             "/user/image/**",
-            "/actuator/**"
+            "/actuator/**",
+            "/ticket/list/**"
     };
 }

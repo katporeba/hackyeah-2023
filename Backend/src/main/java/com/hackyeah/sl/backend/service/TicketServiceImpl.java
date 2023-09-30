@@ -7,11 +7,16 @@ import com.hackyeah.sl.backend.domain.mappers.TicketMapper;
 import com.hackyeah.sl.backend.repository.TicketRepository;
 import com.hackyeah.sl.backend.repository.UserRepository;
 import com.hackyeah.sl.backend.utilty.JwtTokenProvider;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.hackyeah.sl.backend.constant.SecurityConstant.TOKEN_PREFIX;
@@ -26,6 +31,8 @@ public class TicketServiceImpl implements TicketService {
     private UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private TicketMapper ticketMapper;
+    private final EntityManager entityManager;
+
 
     @Override
     public List<Ticket> getTickets() {
@@ -54,9 +61,35 @@ public class TicketServiceImpl implements TicketService {
 
         Ticket newtTicket = ticketMapper.toEntity(ticketDTO);
 
+        generateRandomTicketId(newtTicket);
+        extendExpirationLocalDateTime(newtTicket);
+
         user.addTicket(newtTicket);
         newtTicket.setUser(user);
 
         return ticketRepository.save(newtTicket);
+    }
+
+    private void generateRandomTicketId(Ticket newtTicket) {
+        newtTicket.setTicketId(RandomStringUtils.randomAlphanumeric(15));
+    }
+
+    private void extendExpirationLocalDateTime(Ticket newtTicket) {
+        newtTicket.setExpirationDate(LocalDateTime.now().plusHours(1));
+    }
+
+    public List<Ticket> getTicketsWithinOneKilometer(Double targetLatitude, Double targetLongitude) {
+        double radius = 1.0; // 1 kilometer
+        String hql = "SELECT t FROM Ticket t WHERE " +
+                "6371 * 2 * ASIN(SQRT(POWER(SIN((:targetLatitude - t.latitude) * PI() / 180 / 2), 2) + " +
+                "COS(:targetLatitude * PI() / 180) * COS(t.latitude * PI() / 180) * " +
+                "POWER(SIN((:targetLongitude - t.longitude) * PI() / 180 / 2), 2))) <= :radius";
+
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("targetLatitude", targetLatitude);
+        query.setParameter("targetLongitude", targetLongitude);
+        query.setParameter("radius", radius);
+
+        return query.getResultList();
     }
 }
