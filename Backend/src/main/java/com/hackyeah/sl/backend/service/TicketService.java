@@ -13,7 +13,7 @@ public interface TicketService {
 
     List<Ticket> getTicketsByCategory(String category);
 
-    void deleteTicker(String ticketId);
+    void deleteTicket(String ticketId);
 
     Ticket addTicket(TicketDto ticket, String authorization);
 
@@ -26,6 +26,8 @@ public interface TicketService {
     Ticket getTicketsByTicketId(String ticketId);
 
     void saveTicketImage(Ticket ticket, MultipartFile image) throws IOException, NotAnImageFileException;
+
+    Ticket updateTicket(String ticketId, Ticket newTicket);
 
 
 }
