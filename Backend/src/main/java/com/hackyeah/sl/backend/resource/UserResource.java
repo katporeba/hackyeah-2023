@@ -158,26 +158,26 @@ public class UserResource extends ExceptionHandling {
         return response(OK, NEW_PASSWORD_WAS_SENT_TO + email);
     }
 
-    @DeleteMapping("/delete/{username}")
+    @DeleteMapping("/delete/{email}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
     public ResponseEntity<HttpResponse> deleteUser(
-            @NotBlank @PathVariable String username) throws IOException {
-        userService.deleteUser(username);
+            @NotBlank @PathVariable String email) throws IOException {
+        userService.deleteUser(email);
         return response(OK, USER_DELETED_SUCCESSFULLY);
     }
 
-    @GetMapping(path = "/image/{username}/{filename}", produces = IMAGE_JPEG_VALUE)
+    @GetMapping(path = "/image/{email}/{filename}", produces = IMAGE_JPEG_VALUE)
     public byte[] getProfileImage(
-            @NotBlank @PathVariable String username,
+            @NotBlank @PathVariable String email,
             @NotBlank @PathVariable String filename)
             throws IOException {
-        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + filename));
+        return Files.readAllBytes(Paths.get(USER_FOLDER + email + FORWARD_SLASH + filename));
     }
 
-    @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)
-    public byte[] getTempProfileImage(@NotBlank @PathVariable String username)
+    @GetMapping(path = "/image/profile/{email}", produces = IMAGE_JPEG_VALUE)
+    public byte[] getTempProfileImage(@NotBlank @PathVariable String email)
             throws IOException {
-        URL url = new URL(TEMP_PROFILE_IMAGE_BASE_URL + username);
+        URL url = new URL(TEMP_PROFILE_IMAGE_BASE_URL + email);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         InputStream inputStream = null;

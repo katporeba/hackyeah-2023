@@ -48,7 +48,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder passwordEncoder;
   private final LoginAttemptService loginAttemptService;
-  private final EmailService emailService;
 
   @SneakyThrows
   @Override

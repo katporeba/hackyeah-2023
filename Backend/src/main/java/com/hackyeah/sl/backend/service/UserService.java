@@ -39,7 +39,7 @@ public interface UserService {
       MultipartFile profileImage)
       throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
 
-  void deleteUser(String username) throws IOException;
+  void deleteUser(String email) throws IOException;
 
   void resetPassword(String email) throws EmailNotFoundException;
 

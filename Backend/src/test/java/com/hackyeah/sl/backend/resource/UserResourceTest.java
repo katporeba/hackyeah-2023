@@ -4,43 +4,18 @@ package com.hackyeah.sl.backend.resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackyeah.sl.backend.domain.DTO.UserRegister;
 import com.hackyeah.sl.backend.domain.User;
-import com.hackyeah.sl.backend.exception.domain.*;
 import com.hackyeah.sl.backend.repository.UserRepository;
-import com.hackyeah.sl.backend.service.EmailService;
 import com.hackyeah.sl.backend.service.UserService;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-
-import java.io.FileInputStream;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,8 +37,6 @@ class UserResourceTest {
   @Autowired private UserRepository userRepository;
 
   @Autowired private UserService userService;
-
-  @MockBean private EmailService emailService;
 
   @Autowired ObjectMapper objectMapper;
 
