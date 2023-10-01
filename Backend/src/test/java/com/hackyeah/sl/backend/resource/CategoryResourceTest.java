@@ -78,23 +78,4 @@ class CategoryResourceTest {
                 .perform(delete(API_ROOT + "/delete/" + one.getName()))
                 .andExpect(status().isForbidden());
     }
-
-    @Test
-    @WithMockUser(
-            username = "admin",
-            authorities = {"user:delete"})
-    void deleteUserAdmin() throws Exception {
-        mockMvc.perform(delete(API_ROOT + "/delete/" + one.getName())).andExpect(status().isOk());
-    }
-
-//    @Test
-//    @WithMockUser(
-//            username = "admin",
-//            roles = {"ADMIN"})
-//    void editCategory() throws Exception {
-//        mockMvc.perform(put(API_ROOT + "/edit/" + one.getName())
-//                .contentType(APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(one)))
-//                .andExpect(status().isOk());
-//    }
 }
