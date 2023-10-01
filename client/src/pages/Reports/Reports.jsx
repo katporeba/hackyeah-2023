@@ -1,7 +1,7 @@
 import "./Reports.scss";
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import arrow from "../../assets/arrow.svg";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AnimalCard from "../../components/AnimalCard/AnimalCard";
 
 function Reports() {
@@ -9,7 +9,7 @@ function Reports() {
     <>
       <div className="navbox">
         <div className="navbox-go-back">
-          <img src={arrow} alt="arrow" />
+          <ArrowBackIcon />
         </div>
       </div>
       <Box className="reports-container">
