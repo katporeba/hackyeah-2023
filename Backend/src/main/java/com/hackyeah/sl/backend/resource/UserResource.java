@@ -64,9 +64,6 @@ public class UserResource extends ExceptionHandling {
     @PreAuthorize("hasAnyAuthority('user:create')")
     @PostMapping("/add")
     public ResponseEntity<User> add(
-            @NotBlank @RequestParam String firstName,
-            @NotBlank @RequestParam String lastName,
-            @NotBlank @RequestParam String username,
             @NotBlank @Email @RequestParam String email,
             @NotBlank @RequestParam String password,
             @NotBlank @RequestParam String role,
