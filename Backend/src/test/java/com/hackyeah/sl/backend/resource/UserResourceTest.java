@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackyeah.sl.backend.domain.DTO.UserRegister;
 import com.hackyeah.sl.backend.domain.User;
 import com.hackyeah.sl.backend.exception.domain.EmailExistException;
-import com.hackyeah.sl.backend.exception.domain.UsernameExistException;
 import com.hackyeah.sl.backend.repository.UserRepository;
 import com.hackyeah.sl.backend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -27,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import java.io.FileInputStream;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,17 +41,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserResourceTest {
 
   private static final String API_ROOT = "/user";
-  private static final String[] authorities_user = {"ROLE_USER"};
   public static final String PASSWORD = "somepass";
   public static final String USERNAME = "jdoe";
-  public static final String USERNAME_OKOT = "olakot";
-  public static final String AVATAR_JPG = "src/test/resources/images/avatar.jpg";
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private UserRepository userRepository;
-
-  @Autowired private UserService userService;
 
   @Autowired ObjectMapper objectMapper;
 

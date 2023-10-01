@@ -103,4 +103,13 @@ https://www.figma.com/proto/7LV1CaxPLk1OmFnxl87CXV/HackYeah-2023?page-id=0%3A1&t
 
 # Endpointy:
 
+ - /ticket/
+![alt text](./resources/ticket.png)
+ - /user/
+![alt text](./resources/user.png)
+-  /category/
+![alt text](./resources/category.png)
+
 # Baza danych:
+
+![alt text](./resources/baza.png)
