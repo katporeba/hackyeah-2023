@@ -47,7 +47,7 @@ public class UserResource extends ExceptionHandling {
 
     public static final String NEW_PASSWORD_WAS_SENT_TO = "Email with new password was sent to: ";
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
-    public static final String USER_LOGGED_OFF = "User deleted successfully";
+    public static final String USER_LOGGED_OFF = "User logged off successfully";
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
@@ -116,17 +116,6 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(updateUser, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('user:update') OR #currentUsername == principal")
-    @PostMapping("/updateProfileImage")
-    public ResponseEntity<User> updateProfileImage(
-            @NotBlank @RequestParam String username,
-            @RequestParam(required = true) MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
-
-        User user = userService.updateProfileImage(username, profileImage);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
-    }
-
     @PostMapping("/login")
     public ResponseEntity<User> login(@Valid @RequestBody UserLogin user) throws EmailNotFoundException {
 
@@ -176,16 +165,6 @@ public class UserResource extends ExceptionHandling {
         userService.deleteUser(email);
         return response(OK, USER_DELETED_SUCCESSFULLY);
     }
-
-    @GetMapping(path = "/image/{email}/{filename}", produces = IMAGE_JPEG_VALUE)
-    public byte[] getProfileImage(
-            @NotBlank @PathVariable String email,
-            @NotBlank @PathVariable String filename)
-            throws IOException {
-        return Files.readAllBytes(Paths.get(USER_FOLDER + email + FORWARD_SLASH + filename));
-    }
-
-
 
     @GetMapping(path = "/image/profile/{email}", produces = IMAGE_JPEG_VALUE)
     public byte[] getTempProfileImage(@NotBlank @PathVariable String email)

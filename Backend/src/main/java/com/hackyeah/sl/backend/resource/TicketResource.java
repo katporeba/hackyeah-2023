@@ -43,7 +43,6 @@ public class TicketResource {
     public ResponseEntity<Ticket> extendTimeBy1Hour(@NotBlank @PathVariable String ticketId) {
 
         Ticket ticket = ticketService.extendTicketTime(ticketId);
-
         return new ResponseEntity<>(ticket, OK);
     }
 
@@ -61,7 +60,6 @@ public class TicketResource {
     public ResponseEntity<Ticket> updateTicket(@NotBlank @PathVariable String ticketId, @RequestBody Ticket ticket) {
 
         Ticket newTicket = ticketService.updateTicket(ticketId, ticket);
-
         return new ResponseEntity<>(newTicket, OK);
     }
 
