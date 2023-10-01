@@ -1,6 +1,10 @@
 .reports-container.MuiBox-root {
   height: 90vh;
-  width: 90vw;
+  width: 100vw;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .reports-title.MuiTypography-root {
@@ -16,4 +20,24 @@
 .reports-cards.MuiBox-root {
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+  width: 25rem;
+}
+
+.animal-delete.MuiBox-root {
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+}
+
+.animal-card-container.MuiBox-root {
+  position: relative;
+}
+
+.animal-location.MuiBox-root {
+  margin-bottom: 0.5rem;
+}
+
+.reports-title.MuiTypography-root {
+  margin-bottom: 1rem;
 }
